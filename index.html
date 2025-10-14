@@ -8,10 +8,24 @@
             font-family: 'Roboto Mono', monospace;
         }
         html, body {
-            margin: 10px;
+            margin: 0;
             padding: 0;
             background-color: black;
             color: white;
+            width: 100%;
+            height: 100%;
+        }
+
+        h1 {
+          height: 50px;
+          line-height: 50px;
+          text-align: center;
+        }
+
+        div.editor {
+            width: calc(100% - 40px);
+            height: calc(100% - 110px);
+            margin: 20px;
         }
 
         textarea {
@@ -25,13 +39,14 @@
             resize: none;
             color: white;
             height: 100%;
+            font-size: 15pt;
         }
     </style>
   </head>
   <body>
     <h1>SAL Interpreter</h1>
-    <div>
-      <textarea>Hi</textarea>
+    <div class="editor">
+      <textarea placeholder="Enter some code here"></textarea>
     </div>
   </body>
 </html>
