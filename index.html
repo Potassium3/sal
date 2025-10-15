@@ -26,19 +26,41 @@
             width: calc(100% - 40px);
             height: calc(100% - 110px);
             margin: 20px;
+            position: relative;
         }
 
         textarea {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 10px;
             padding: 10px;
             margin: 0;
+            outline: none;
+            border: none;
+            opacity: 0;
+            resize: none;
+            color: white;
+            font-size: 15pt;
+            z-index: 1000;
+        }
+
+        div.code {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 0;
             outline: none;
             border: none;
             background-color: #222200;
             resize: none;
-            color: white;
-            height: 100%;
+            color: red;
             font-size: 15pt;
         }
     </style>
@@ -46,7 +68,13 @@
   <body>
     <h1>SAL Interpreter</h1>
     <div class="editor">
-      <textarea placeholder="Enter some code here"></textarea>
+      <textarea id="input" placeholder="Enter some code here"></textarea>
+      <div id="code" role="code content"></div>
     </div>
+    <script>
+      setInterval(function () {
+        document.getElementById("code").innerText = document.getElementById("input").value
+      })
+    </script>
   </body>
 </html>
