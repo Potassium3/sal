@@ -14,6 +14,7 @@
             color: white;
             width: 100%;
             height: 100%;
+            --blue: #03d3fc;
         }
 
         h1 {
@@ -23,57 +24,102 @@
         }
 
         div.editor {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
             width: calc(100% - 40px);
             height: calc(100% - 110px);
             margin: 20px;
             position: relative;
         }
 
-        textarea {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+        div#code {
+            width: 50%;
             height: 100%;
             border-radius: 10px;
             padding: 10px;
             margin: 0;
             outline: none;
             border: none;
-            opacity: 0;
             resize: none;
             color: white;
+            background-color: #241800;
             font-size: 15pt;
             z-index: 1000;
         }
 
-        div.code {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+        div#slider {
+          position: relative;
+          width: 10px;
+          border-radius: 5px;
+          cursor: ew-resize;
+        }
+
+        div#slider-decor {
+          position: absolute;
+          top: 50%;
+          left: 25%;
+          width: 50%;
+          height: 100px;
+          transform: translateY(-50%);
+          background-color: #ffffff88;
+          border-radius: 9999px;
+        }
+
+        div#slider:hover>div {
+          background-color: var(--blue);
+        }
+
+        div#output {
+            width: 50%;
             height: 100%;
             border-radius: 10px;
             padding: 10px;
             margin: 0;
             outline: none;
             border: none;
-            background-color: #222200;
             resize: none;
-            color: red;
+            color: white;
+            background-color: #241800;
             font-size: 15pt;
+            z-index: 1000;
+        }
+
+        .tx-bl {
+          display: inline-block;
+          color: var(--blue);
         }
     </style>
   </head>
   <body>
-    <h1>SAL Interpreter</h1>
+    <h1 id="title">SAL Interpreter</h1>
     <div class="editor">
-      <textarea id="input" placeholder="Enter some code here"></textarea>
-      <div id="code" role="code content"></div>
+      <div id="code" placeholder="Enter some code here" type="textarea" contenteditable>Hello there</div>
+      <div id="slider">
+        <div id="slider-decor"></div>
+      </div>
+      <div id="output">Output here</div>
     </div>
     <script>
-      setInterval(function () {
-        document.getElementById("code").innerText = document.getElementById("input").value
+
+      document.getElementById("code").addEventListener("input", (e) => {
+        let text = document.getElementById("code").innerText;
+        text = text.split('').map(function(l) {
+          if (l === "e") {
+            return `<span class="tx-bl">e</span>`;
+          } else {
+            return l
+          }
+        }).join('')
+        //let range = document.createRange();
+        document.getElementById("code").innerHTML = text;
+        //range.setStart(document.getElementById("code"), 1);
+      }, 50)
+
+      document.getElementById("code").addEventListener("keyup", (e) => {
+        let el = document.getElementById("code");
+        var val = el.value;
+        document.getElementById("title").innerHTML = (val.slice(0, el.selectionStart).length);
       })
     </script>
   </body>
