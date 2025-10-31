@@ -140,17 +140,27 @@
 
       document.getElementById("code").addEventListener("keyup", (function() {
         let text = this.innerText
-        text = text
-          .replaceAll(/&/g, '&amp;')
-          .replaceAll(/</g, '&lt;')
-          .replaceAll(/>/g, '&gt;')
-          .replaceAll("\n", "<br>");
-        
-        // very simple regexes for demo
-        text = text.replace(/(a-oq-z)a/, "<span class='tx-a'>a</span>");
-        text = text.replace("/(b-z)s/", "<span class='tx-s'>s</span>");
-        //text = text.replace(/\b\d+\b/, "<span class='tx-e'>$&</span>");
-        //text = text.replace(/(["'])(?:(?=(\\?))\2.)*?\1/, "<span class='tx-f'>$&</span>");
+
+        /*text = text
+          .replaceAll("\n", "<br>")
+          .replaceAll(" ", "&nbsp;");*/
+
+        newtext = "";
+        let include = true;
+        for (let char of text) {
+          if (char == "<") {
+            include = false;
+          } else if (char == ">") {
+            include = true;
+          } else if (char == "a" && include) {
+            newtext += "<span class='tx-a'>a</span>"
+          } else if (char == "s" && include) {
+            newtext += "<span class='tx-s'>s</span>"
+          } else if (include) {
+            newtext += char;
+          }
+        }
+        text = newtext;
         
         document.getElementById("coloured").innerHTML = text;
       }));
