@@ -4,18 +4,20 @@
     <title>SAL Interpreter</title>
     <style>
         * {
-            box-sizing: border-box;
-            font-family: 'Roboto Mono', monospace;
+          box-sizing: border-box;
+          font-family: 'Roboto Mono', monospace;
+          caret-color: white;
         }
         html, body {
-            margin: 0;
-            padding: 0;
-            background-color: black;
-            color: white;
-            width: 100%;
-            height: 100%;
-            --blue: #03d3fc;
-            --back: #241800;
+          margin: 0;
+          padding: 0;
+          background-color: #08080a;
+          color: white;
+          width: 100%;
+          height: 100%;
+          --blue: #03d3fc;
+          --green: #08ff63;
+          --back: #241800;
         }
 
         h1 {
@@ -24,39 +26,62 @@
           text-align: center;
         }
 
+        div.workspace {
+          display: flex;
+          flex-direction: row;
+          gap: 5px;
+          width: calc(100% - 40px);
+          height: calc(100% - 110px);
+          margin: 20px;
+          position: relative;
+        }
+
         div.editor {
-            display: flex;
-            flex-direction: row;
-            gap: 5px;
-            width: calc(100% - 40px);
-            height: calc(100% - 110px);
-            margin: 20px;
-            position: relative;
+          position: relative;
+          flex-grow: 2;
+          height: 100%;
+          border-radius: 10px;
+          padding: 10px;
+          margin: 0;
+          outline: none;
+          border: none;
+          resize: none;
+          color: #dddddd;
+          background-color: var(--back);
+          font-size: 15pt;
+          z-index: 1000;
+          overflow-x: hidden;
+          overflow-y: auto;
         }
 
-        div#code {
-            flex-grow: 2;
-            height: 100%;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 0;
-            outline: none;
-            border: none;
-            resize: none;
-            color: white;
-            background-color: var(--back);
-            font-size: 15pt;
-            z-index: 1000;
+        .code {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          width: calc(100% - 40px);
+          height: calc(100% - 40px);
+          outline: none;
+          opacity: 0.2;
+          z-index: 2;
         }
 
-        div#slider {
+        .coloured {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          width: calc(100% - 40px);
+          height: calc(100% - 40px);
+          z-index: 1;
+        }
+
+        div.slider {
           position: relative;
           width: 10px;
           border-radius: 5px;
           cursor: ew-resize;
         }
 
-        div#slider-decor {
+        div.slider-decor {
           position: absolute;
           top: 50%;
           left: 25%;
@@ -67,11 +92,11 @@
           border-radius: 9999px;
         }
 
-        div#slider:hover>div {
+        div.slider:hover>div {
           background-color: white;
         }
 
-        div#output {
+        div.output {
             flex-grow: 1;
             height: 100%;
             border-radius: 10px;
@@ -86,42 +111,49 @@
             z-index: 1000;
         }
 
-        .tx-bl {
+        .tx-a {
           display: inline-block;
           color: var(--blue);
+          z-index: 2;
+        }
+
+        .tx-s {
+          display: inline-block;
+          color: var(--green);
+          z-index: 2;
         }
     </style>
   </head>
   <body>
     <h1 id="title">SAL Interpreter</h1>
-    <div class="editor">
-      <div id="code" placeholder="Enter some code here" type="textarea" contenteditable>Hello there</div>
-      <div id="slider">
-        <div id="slider-decor"></div>
+    <div class="workspace">
+      <div class="editor">
+        <div id="code" class="code" placeholder="Enter some code here" type="textarea" contenteditable>Hello there</div>
+        <div id="coloured" class="coloured">Hello there</div>
       </div>
-      <div id="output">Output here</div>
+      <div class="slider">
+        <div class="slider-decor"></div>
+      </div>
+      <div class="output">Output here</div>
     </div>
     <script>
 
-      document.getElementById("code").addEventListener("input", (e) => {
-        let text = document.getElementById("code").innerText;
-        text = text.split('').map(function(l) {
-          if (l === "e") {
-            return `<span class="tx-bl">e</span>`;
-          } else {
-            return l
-          }
-        }).join('')
-        //let range = document.createRange();
-        document.getElementById("code").innerHTML = text;
-        //range.setStart(document.getElementById("code"), 1);
-      }, 50)
-
-      document.getElementById("code").addEventListener("keyup", (e) => {
-        let el = document.getElementById("code");
-        var val = el.value;
-        document.getElementById("title").innerHTML = (val.slice(0, el.selectionStart).length);
-      })
+      document.getElementById("code").addEventListener("keyup", (function() {
+        let text = this.innerText
+        text = text
+          .replaceAll(/&/g, '&amp;')
+          .replaceAll(/</g, '&lt;')
+          .replaceAll(/>/g, '&gt;')
+          .replaceAll("\n", "<br>");
+        
+        // very simple regexes for demo
+        text = text.replace(/(a-oq-z)a/, "<span class='tx-a'>a</span>");
+        text = text.replace("/(b-z)s/", "<span class='tx-s'>s</span>");
+        //text = text.replace(/\b\d+\b/, "<span class='tx-e'>$&</span>");
+        //text = text.replace(/(["'])(?:(?=(\\?))\2.)*?\1/, "<span class='tx-f'>$&</span>");
+        
+        document.getElementById("coloured").innerHTML = text;
+      }));
     </script>
   </body>
 </html>
